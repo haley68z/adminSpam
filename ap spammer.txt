@@ -1,0 +1,215 @@
+--[[
+    ADMIN SPAMMER PANEL
+    Version: 2.0
+    Auteur: Antigravity
+    Credit: by haleyy68z
+]]
+
+local Players = game:GetService("Players")
+local TextChatService = game:GetService("TextChatService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+
+local lp = Players.LocalPlayer
+local pGui = lp:WaitForChild("PlayerGui")
+
+-- Suppression de l'ancienne version si elle existe
+if pGui:FindFirstChild("AdminSpammerV2") then pGui.AdminSpammerV2:Destroy() end
+
+-- ===================== FONCTIONS CORE =====================
+
+local function sendMsg(msg)
+    if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+        local channel = TextChatService.TextChannels:FindFirstChild("RBXGeneral")
+        if channel then channel:SendAsync(msg) end
+    else
+        local remote = ReplicatedStorage:FindFirstChild("SayMessageRequest", true)
+        if remote then remote:FireServer(msg, "All") end
+    end
+end
+
+local function executeTroll(target)
+    local commands = {":rocket ", ":ballon ", ":inverse ", ":morph ", ":tiny ", ":jumpscare "}
+    for _, cmd in ipairs(commands) do
+        task.spawn(function()
+            sendMsg(cmd .. target)
+        end)
+    end
+end
+
+-- ===================== CRÉATION DE L'INTERFACE =====================
+
+local sg = Instance.new("ScreenGui")
+sg.Name = "AdminSpammerV2"
+sg.ResetOnSpawn = false
+sg.Parent = pGui
+
+-- Cadre Principal (Transparent et Petit)
+local main = Instance.new("Frame")
+main.Name = "Main"
+main.Size = UDim2.new(0, 180, 0, 260) -- Taille réduite
+main.Position = UDim2.new(0.5, -90, 0.5, -130)
+main.BackgroundColor3 = Color3.fromRGB(10, 10, 12)
+main.BackgroundTransparency = 0.4 -- Transparence demandée
+main.BorderSizePixel = 0
+main.Active = true
+main.Parent = sg
+
+local corner = Instance.new("UICorner", main)
+corner.CornerRadius = UDim.new(0, 8)
+
+local stroke = Instance.new("UIStroke", main)
+stroke.Color = Color3.fromRGB(255, 0, 0)
+stroke.Thickness = 1.2
+stroke.Transparency = 0.4
+
+-- Titre ADMIN SPAMMER
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 20)
+title.Position = UDim2.new(0, 0, 0, 8)
+title.BackgroundTransparency = 1
+title.Text = "ADMIN SPAMMER"
+title.TextColor3 = Color3.fromRGB(255, 50, 50)
+title.TextSize = 13
+title.Font = Enum.Font.GothamBold
+title.Parent = main
+
+-- Sous-titre haleyy68z
+local credit = Instance.new("TextLabel")
+credit.Size = UDim2.new(1, 0, 0, 12)
+credit.Position = UDim2.new(0, 0, 0, 22)
+credit.BackgroundTransparency = 1
+credit.Text = "by haleyy68z"
+credit.TextColor3 = Color3.fromRGB(180, 180, 180)
+credit.TextSize = 9
+credit.Font = Enum.Font.GothamMedium
+credit.Parent = main
+
+-- Liste des joueurs (ScrollingFrame)
+local scroll = Instance.new("ScrollingFrame")
+scroll.Size = UDim2.new(0.9, 0, 0.75, 0)
+scroll.Position = UDim2.new(0.05, 0, 0.18, 0)
+scroll.BackgroundTransparency = 1
+scroll.BorderSizePixel = 0
+scroll.ScrollBarThickness = 1
+scroll.ScrollBarImageColor3 = Color3.fromRGB(255, 0, 0)
+scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+scroll.Parent = main
+
+-- Lien Discord
+local discord = Instance.new("TextLabel")
+discord.Name = "DiscordLink"
+discord.Size = UDim2.new(1, 0, 0, 15)
+discord.Position = UDim2.new(0, 0, 1, -15)
+discord.BackgroundTransparency = 1
+discord.Text = "discord.gg/4pjvkzBs"
+discord.TextColor3 = Color3.fromRGB(114, 137, 218) -- Couleur Discord
+discord.TextSize = 9
+discord.Font = Enum.Font.GothamBold
+discord.Parent = main
+
+local layout = Instance.new("UIListLayout", scroll)
+layout.Padding = UDim.new(0, 3)
+layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+-- ===================== MISE À JOUR LISTE =====================
+
+local function updatePlayerList()
+    -- On nettoie
+    for _, btn in ipairs(scroll:GetChildren()) do
+        if btn:IsA("TextButton") then btn:Destroy() end
+    end
+
+    -- On génère les boutons
+    for _, p in ipairs(Players:GetPlayers()) do
+        local pBtn = Instance.new("TextButton")
+        pBtn.Size = UDim2.new(1, 0, 0, 28)
+        pBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        pBtn.BackgroundTransparency = 0.93
+        pBtn.Text = "" -- Texte géré par un TextLabel séparé
+        pBtn.Parent = scroll
+        
+        Instance.new("UICorner", pBtn).CornerRadius = UDim.new(0, 5)
+
+        -- Avatar Headshot
+        local headshot = Instance.new("ImageLabel")
+        headshot.Name = "Headshot"
+        headshot.Size = UDim2.new(0, 22, 0, 22)
+        headshot.Position = UDim2.new(0, 4, 0.5, -11)
+        headshot.BackgroundTransparency = 1
+        headshot.Image = "rbxthumb://type=AvatarHeadShot&id=" .. p.UserId .. "&w=150&h=150"
+        headshot.Parent = pBtn
+        Instance.new("UICorner", headshot).CornerRadius = UDim.new(1, 0)
+
+        -- Nom du joueur
+        local pLabel = Instance.new("TextLabel")
+        pLabel.Name = "PlayerName"
+        pLabel.Size = UDim2.new(1, -35, 1, 0)
+        pLabel.Position = UDim2.new(0, 32, 0, 0)
+        pLabel.BackgroundTransparency = 1
+        pLabel.Text = p.Name
+        pLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
+        pLabel.TextSize = 11
+        pLabel.Font = Enum.Font.GothamMedium
+        pLabel.TextXAlignment = Enum.TextXAlignment.Left
+        pLabel.Parent = pBtn
+
+        -- Hover Effects
+        pBtn.MouseEnter:Connect(function()
+            TweenService:Create(pBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.8}):Play()
+            TweenService:Create(pLabel, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 50, 50)}):Play()
+        end)
+        pBtn.MouseLeave:Connect(function()
+            TweenService:Create(pBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.93}):Play()
+            TweenService:Create(pLabel, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(240, 240, 240)}):Play()
+        end)
+
+        -- Click Action
+        pBtn.MouseButton1Click:Connect(function()
+            executeTroll(p.Name)
+        end)
+    end
+    scroll.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y)
+end
+
+Players.PlayerAdded:Connect(updatePlayerList)
+Players.PlayerRemoving:Connect(updatePlayerList)
+updatePlayerList()
+
+-- ===================== SYSTÈME DRAG (MOUVEMENT) =====================
+
+local dragging, dragInput, dragStart, startPos
+
+local function update(input)
+	local delta = input.Position - dragStart
+	main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+main.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = main.Position
+		
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+main.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+		dragInput = input
+	end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+	if input == dragInput and dragging then
+		update(input)
+	end
+end)
+
+print("Panel ADMIN SPAMMER by haleyy68z chargé avec succès !")
