@@ -30,7 +30,7 @@ local function sendMsg(msg)
 end
 
 local function executeTroll(target)
-    local commands = {":rocket ", ":ballon ", ":jail ", ":inverse ", ":morph ", ":tiny ", ":jumpscare "}
+    local commands = {":rocket ", ":balloon ", ":jail ", ":morph "}
     for _, cmd in ipairs(commands) do
         task.spawn(function()
             sendMsg(cmd .. target)
