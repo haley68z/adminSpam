@@ -101,13 +101,15 @@ local layout = Instance.new("UIListLayout", scroll)
 layout.Padding = UDim.new(0, 4)
 layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
--- Discord Link (En bas, sans fond bleu)
+-- Discord Link (En bas, totalement sans fond)
 local discordBtn = Instance.new("TextButton")
 discordBtn.Size = UDim2.new(0.9, 0, 0, 20)
 discordBtn.Position = UDim2.new(0.05, 0, 1, -25)
-discordBtn.BackgroundTransparency = 1 -- Enlève le fond
+discordBtn.BackgroundTransparency = 1
+discordBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+discordBtn.AutoButtonColor = false -- Empêche le flash bleu au clic
 discordBtn.Text = "discord.gg/fwKfdKYa"
-discordBtn.TextColor3 = Color3.fromRGB(150, 150, 150) -- Gris clair discret
+discordBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
 discordBtn.TextSize = 10
 discordBtn.Font = Enum.Font.GothamBold
 discordBtn.Parent = main
