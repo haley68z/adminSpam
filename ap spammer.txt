@@ -75,10 +75,21 @@ title.TextSize = 14
 title.Font = Enum.Font.GothamBlack
 title.Parent = main
 
+-- Sous-titre Crédit
+local credit = Instance.new("TextLabel")
+credit.Size = UDim2.new(1, 0, 0, 15)
+credit.Position = UDim2.new(0, 0, 0, 25)
+credit.BackgroundTransparency = 1
+credit.Text = "by Haleyy68z"
+credit.TextColor3 = Color3.fromRGB(180, 180, 180)
+credit.TextSize = 10
+credit.Font = Enum.Font.GothamMedium
+credit.Parent = main
+
 -- Liste des joueurs (ScrollingFrame)
 local scroll = Instance.new("ScrollingFrame")
-scroll.Size = UDim2.new(0.9, 0, 0, 190)
-scroll.Position = UDim2.new(0.05, 0, 0, 45)
+scroll.Size = UDim2.new(0.9, 0, 0, 180)
+scroll.Position = UDim2.new(0.05, 0, 0, 55)
 scroll.BackgroundTransparency = 1
 scroll.BorderSizePixel = 0
 scroll.ScrollBarThickness = 2
@@ -90,18 +101,16 @@ local layout = Instance.new("UIListLayout", scroll)
 layout.Padding = UDim.new(0, 4)
 layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
--- Discord Link (En bas)
+-- Discord Link (En bas, sans fond bleu)
 local discordBtn = Instance.new("TextButton")
 discordBtn.Size = UDim2.new(0.9, 0, 0, 20)
-discordBtn.Position = UDim2.new(0.05, 0, 1, -30)
-discordBtn.BackgroundColor3 = Color3.fromRGB(88, 101, 242) -- Couleur Discord
-discordBtn.BackgroundTransparency = 0.2
+discordBtn.Position = UDim2.new(0.05, 0, 1, -25)
+discordBtn.BackgroundTransparency = 1 -- Enlève le fond
 discordBtn.Text = "discord.gg/fwKfdKYa"
-discordBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+discordBtn.TextColor3 = Color3.fromRGB(150, 150, 150) -- Gris clair discret
 discordBtn.TextSize = 10
 discordBtn.Font = Enum.Font.GothamBold
 discordBtn.Parent = main
-Instance.new("UICorner", discordBtn).CornerRadius = UDim.new(0, 5)
 
 discordBtn.MouseButton1Click:Connect(function()
     if setclipboard then setclipboard("https://discord.gg/fwKfdKYa") end
